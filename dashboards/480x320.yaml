@@ -15,17 +15,17 @@ font:
     file: 'fonts/materialdesignicons-webfont.ttf'
     size: 20
     bpp: 4
-    glyphs: !include glyphs.yaml
+    glyphs: !include ../common/glyphs.yaml
   - id: mdi_md
     file: 'fonts/materialdesignicons-webfont.ttf'
     size: 26
     bpp: 4
-    glyphs: !include glyphs.yaml
+    glyphs: !include ../common/glyphs.yaml
   - id: mdi_lg
     file: 'fonts/materialdesignicons-webfont.ttf'
     size: 34
     bpp: 4
-    glyphs: !include glyphs.yaml
+    glyphs: !include ../common/glyphs.yaml
 
 .styles:
   - &nav_styles
