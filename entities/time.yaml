@@ -1,0 +1,19 @@
+time:
+  - id: ha_time
+    platform: homeassistant
+    on_time_sync:
+      then:
+          - lvgl.label.update:
+              id: nav_clock
+              text:
+                time_format: "%I:%M %p"
+                time: ha_time
+    on_time:
+      - minutes: '*'
+        seconds: 0
+        then:
+          - lvgl.label.update:
+              id: nav_clock
+              text:
+                time_format: "%I:%M %p"
+                time: ha_time
