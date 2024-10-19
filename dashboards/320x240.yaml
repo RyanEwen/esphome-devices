@@ -186,7 +186,6 @@ lvgl:
                         text: "Dim"
                     - label:
                         text: "Living Room"
-                  # hidden: true
                   on_short_click:
                     - homeassistant.action:
                         action: homeassistant.turn_on
