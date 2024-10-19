@@ -14,7 +14,7 @@ packages:
   
   # living room tv power sensor
   living_room_tv: !include
-    file: templates/entities/switch.yaml
+    file: entities/switch.yaml
     vars:
       uid: living_room_tv
       entity_id: media_player.living_room_tv
