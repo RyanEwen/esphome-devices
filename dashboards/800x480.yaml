@@ -1,0 +1,269 @@
+font:
+  - id: roboto_sm
+    file:
+      type: gfonts
+      family: Roboto
+    size: 26
+    bpp: 4
+  - id: roboto_md
+    file:
+      type: gfonts
+      family: Roboto
+    size: 30
+    bpp: 4
+  - id: mdi_sm
+    file: 'fonts/materialdesignicons-webfont.ttf'
+    size: 26
+    bpp: 4
+    glyphs: !include glyphs.yaml
+  - id: mdi_md
+    file: 'fonts/materialdesignicons-webfont.ttf'
+    size: 32
+    bpp: 4
+    glyphs: !include glyphs.yaml
+  - id: mdi_lg
+    file: 'fonts/materialdesignicons-webfont.ttf'
+    size: 40
+    bpp: 4
+    glyphs: !include glyphs.yaml
+
+.styles:
+  - &nav_styles
+    width: 100%
+    height: 65 # RESOLUTION-SPECIFIC
+    border_width: 0
+    radius: 0
+    pad_all: 0
+
+  - &nav_btn_styles
+    height: 100%
+    border_width: 0
+    radius: 0
+    flex_grow: 1
+
+  - &page_styles
+    bg_color: 0x42495A # ?
+    pad_top: 65 # RESOLUTION-SPECIFIC
+    pad_bottom: 65 # RESOLUTION-SPECIFIC
+
+  - &main_obj_styles
+    width: 100%
+    height: 100%
+    border_width: 0
+    radius: 0
+    pad_top: 10 # RESOLUTION-SPECIFIC
+    pad_bottom: 10 # RESOLUTION-SPECIFIC
+    pad_left: 10 # RESOLUTION-SPECIFIC
+    pad_right: 10 # RESOLUTION-SPECIFIC
+
+  - &main_obj_btn_layout
+    layout:
+      type: FLEX
+      flex_flow: ROW_WRAP
+      flex_align_main: START
+      pad_column: 10 # RESOLUTION-SPECIFIC # match main_obj_styles.pad_all
+      pad_row: 10 # RESOLUTION-SPECIFIC # match main_obj_styles.pad_all
+
+  - &toggle_btn_styles
+    width: 49% # RESOLUTION-SPECIFIC
+    height: 100 # RESOLUTION-SPECIFIC
+
+  - &flex_column_centered
+    layout:
+      type: FLEX
+      flex_flow: COLUMN
+      flex_align_main: CENTER
+      flex_align_cross: CENTER
+      flex_align_track: CENTER
+
+lvgl:
+  default_font: roboto_md
+  disp_bg_color: 0x42495A # ?
+  theme:
+    obj:
+      bg_color: 0x42495A
+      text_color: 0xFFFFFF
+    button:
+      bg_color: 0x5A6173
+      border_width: 1
+      border_color: 0x00B6FF
+      radius: 20
+      shadow_width: 0
+    bar:
+      bg_color: 0x111111
+      text_color: 0xFFFFFF
+  top_layer:
+    widgets:
+      - obj: # title bar
+          <<: *nav_styles
+          bg_color: 0x5A6173
+          align: TOP_MID
+          widgets:
+            - label: # title
+                id: page_title
+                align: LEFT_MID
+                x: 10 # RESOLUTION-SPECIFIC
+                text: " "
+            - label: # clock
+                id: nav_clock
+                align: RIGHT_MID
+                x: -10 # RESOLUTION-SPECIFIC
+                text: " "
+      - obj: # navigation bar
+          <<: *nav_styles
+          pad_all: 0
+          bg_color: 0x42495A
+          align: BOTTOM_MID
+          layout:
+            type: FLEX
+            flex_flow: ROW
+            flex_align_main: CENTER
+            pad_column: 1
+          widgets:
+            - button: # prev page
+                <<: *nav_btn_styles
+                on_press:
+                  then:
+                    lvgl.page.previous:
+                widgets:
+                  - label:
+                      align: CENTER
+                      text: "\U000F0141"
+                      text_font: mdi_lg
+
+            - button: # home page
+                <<: *nav_btn_styles
+                on_press:
+                  then:
+                    lvgl.page.show: living_room
+                widgets:
+                  - label:
+                      align: CENTER
+                      text: "\U000F02DC"
+                      text_font: mdi_lg
+
+            - button: # next page
+                <<: *nav_btn_styles
+                on_press:
+                  then:
+                    lvgl.page.next:
+                widgets:
+                  - label:
+                      align: CENTER
+                      text: "\U000F0142"
+                      text_font: mdi_lg
+  pages:
+    - id: living_room
+      on_load:
+        then:
+          lvgl.label.update:
+            id: page_title
+            text: Living Room
+      <<: *page_styles
+      widgets:
+        - obj:
+            <<: *main_obj_styles
+            <<: *main_obj_btn_layout
+            widgets:
+              - button: # tv power
+                  id: living_room_tv_btn
+                  <<: *toggle_btn_styles
+                  <<: *flex_column_centered
+                  widgets:
+                    - label:
+                        id: living_room_tv_btn_icon
+                        align: CENTER
+                        text: "\U000F0425"
+                        text_font: mdi_lg
+                  on_short_click:
+                    - homeassistant.action:
+                        action: media_player.toggle
+                        data:
+                          entity_id: media_player.living_room_tv
+
+              - button: # dim scene
+                  id: dim_btn
+                  <<: *toggle_btn_styles
+                  <<: *flex_column_centered
+                  widgets:
+                    - label:
+                        text: "Dim"
+                    - label:
+                        text: "Living Room"
+                  on_short_click:
+                    - homeassistant.action:
+                        action: homeassistant.turn_on
+                        data:
+                          entity_id: scene.living_room_lights_tv_watching
+                  on_long_press:
+                    - homeassistant.action:
+                        action: light.turn_on
+                        data:
+                          entity_id: light.all_living_room_lights
+                          brightness_pct: '100'
+
+              - button: # play / pause
+                  id: living_room_tv_playpause_btn
+                  <<: *toggle_btn_styles
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "\U000F040E"
+                        text_font: mdi_lg
+                  on_short_click:
+                    - homeassistant.action:
+                        action: media_player.media_play_pause
+                        data:
+                          entity_id: media_player.living_room_tv
+
+              - button: # volume up
+                  id: living_room_tv_vol_up_btn
+                  <<: *toggle_btn_styles
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "\U000F075D"
+                        text_font: mdi_lg
+                  on_short_click:
+                    - homeassistant.action:
+                        action: media_player.volume_up
+                        data:
+                          entity_id: media_player.living_room_tv
+                  on_long_press_repeat:
+                    - homeassistant.action:
+                        action: media_player.volume_up
+                        data:
+                          entity_id: media_player.living_room_tv
+
+              - button: # stop
+                  id: living_room_tv_stop_btn
+                  <<: *toggle_btn_styles
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "\U000F04DB"
+                        text_font: mdi_lg
+                  on_short_click:
+                    - homeassistant.action:
+                        action: media_player.media_stop
+                        data:
+                          entity_id: media_player.living_room_tv
+
+              - button: # volume down
+                  id: living_room_tv_vol_down_btn
+                  <<: *toggle_btn_styles
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "\U000F075E"
+                        text_font: mdi_lg
+                  on_short_click:
+                    - homeassistant.action:
+                        action: media_player.volume_down
+                        data:
+                          entity_id: media_player.living_room_tv
+                  on_long_press_repeat:
+                    - homeassistant.action:
+                        action: media_player.volume_down
+                        data:
+                          entity_id: media_player.living_room_tv
