@@ -1,0 +1,23 @@
+substitutions:
+  device_name: sunton-43-example
+  friendly_name: Sunton 4.3 Example
+
+packages:
+  # common config
+  common: !include common/common.yaml
+  
+  # device-specific config
+  device: !include devices/ESP32-2432S028R.yaml
+  
+  # time sensor
+  time: !include entities/time.yaml
+  
+  # living room tv power sensor
+  living_room_tv: !include
+    file: templates/entities/switch.yaml
+    vars:
+      uid: living_room_tv
+      entity_id: media_player.living_room_tv
+      
+  # lvgl dashboard
+  layout: !include dashboards/800x480.yaml
