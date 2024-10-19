@@ -1,0 +1,24 @@
+binary_sensor:
+  - id: ${uid}_light_group
+    platform: homeassistant
+    entity_id: ${entity_id}
+    publish_initial_state: true
+    on_state:
+      then:
+        - if:
+            condition:
+              - binary_sensor.is_on: ${uid}_light_group
+            then:
+              - lvgl.label.update:
+                  id: ${uid}_btn_icon
+                  text: "\U000F1253"
+              - lvgl.widget.update:
+                  id: ${uid}_btn_icon
+                  text_color: 0xFFD700
+            else:
+              - lvgl.label.update:
+                  id: ${uid}_btn_icon
+                  text: "\U000F1254"
+              - lvgl.widget.update:
+                  id: ${uid}_btn_icon
+                  text_color: 0xFFFFFF
