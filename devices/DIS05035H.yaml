@@ -1,0 +1,67 @@
+esp32:
+  board: odroid_esp32
+  framework:
+    type: arduino
+
+i2c:
+  sda: 22
+  scl: 21
+
+spi:
+  id: tft
+  clk_pin: 14
+  mosi_pin: 13
+  miso_pin: 33 #12 on v2.0
+  interface: hardware
+
+output:
+  - id: gpio_backlight_pwm
+    platform: ledc
+    pin: 27
+    inverted: False
+
+light:
+  - id: backlight
+    name: Backlight
+    platform: monochromatic
+    output: gpio_backlight_pwm
+    restore_mode: ALWAYS_ON
+
+display:
+  - platform: ili9xxx
+    model: ILI9488_A
+    dimensions:
+      height: 480
+      width: 320
+    transform:
+      mirror_x: true
+    spi_id: tft
+    cs_pin: 15
+    dc_pin: 2
+    invert_colors: false
+    data_rate: 20MHz
+    update_interval: never
+    auto_clear_enabled: false
+
+touchscreen:
+  platform: xpt2046
+  cs_pin: 12 #33 on v2.0
+  interrupt_pin: 36
+  update_interval: 50ms
+  threshold: 400
+  calibration:
+    x_min: 280
+    x_max: 3860
+    y_min: 3860
+    y_max: 340
+  # on_touch:
+  #   - lambda: |-
+  #         ESP_LOGI("cal", "x=%d, y=%d, x_raw=%d, y_raw=%0d",
+  #           touch.x,
+  #           touch.y,
+  #           touch.x_raw,
+  #           touch.y_raw
+  #         );
+
+lvgl:
+  buffer_size: 25%
