@@ -36,8 +36,12 @@ display:
     transform:
       mirror_x: true
     spi_id: tft
-    cs_pin: 15
-    dc_pin: 2
+    cs_pin:
+      number: 15
+      ignore_strapping_warning: true
+    dc_pin:
+      number: 2
+      ignore_strapping_warning: true
     invert_colors: false
     data_rate: 20MHz
     update_interval: never
@@ -45,7 +49,9 @@ display:
 
 touchscreen:
   platform: xpt2046
-  cs_pin: 12 #33 on v2.0
+  cs_pin:
+    number: 12 #33 on v2.0
+    ignore_strapping_warning: true
   interrupt_pin: 36
   update_interval: 50ms
   threshold: 400
