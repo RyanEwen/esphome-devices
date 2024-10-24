@@ -12,7 +12,9 @@ spi:
   - id: tft
     clk_pin: 14
     mosi_pin: 13
-    miso_pin: 12
+    miso_pin:
+      number: 12
+      ignore_strapping_warning: true
   - id: touch
     clk_pin: 25
     mosi_pin: 32
@@ -58,8 +60,12 @@ display:
   - platform: ili9xxx
     model: ILI9341
     spi_id: tft
-    cs_pin: 15
-    dc_pin: 2
+    cs_pin:
+      number: 15
+      ignore_strapping_warning: true
+    dc_pin:
+      number:  2
+      ignore_strapping_warning: true
     invert_colors: false
     update_interval: never
     auto_clear_enabled: false
@@ -69,7 +75,6 @@ touchscreen:
   spi_id: touch
   cs_pin: 33
   interrupt_pin: 36
-  update_interval: 50ms
   threshold: 400
   calibration:
     x_min: 3860
